@@ -1,0 +1,6 @@
+{
+  "summary":  "แผนการอัปเกรดระบบประเมินความเหมาะสมอาชีพตัวแทนประกันชีวิตเป็น 96 ข้อ ครอบคลุม 7 ศาสตร์สากล (MBTI, Big Five, DISC, EQ & AQ, Holland RIASEC & Sales Drive, Enneagram, และสมรรถนะประกันชีวิต) พร้อมแยกหน้าจอผู้ประเมิน (เห็นเฉพาะกราฟตนเอง) และระบบ Admin Dashboard ที่ล็อกอินด้วยบัญชี Google ของแอดมินผ่าน Firebase เพื่อดูผลวิเคราะห์เชิงลึกทุกคน",
+  "updatedAt":  "2026-11-07T06:44:29.222472283Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

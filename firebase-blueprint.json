@@ -1,0 +1,133 @@
+{
+  "entities": {
+    "AssessmentSubmission": {
+      "title": "AssessmentSubmission",
+      "description": "Stores a candidate's registration details, 96-question answers, and computed psychometric summary for Admin review.",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "Candidate first name",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Candidate last name",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Candidate nickname",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "age": {
+          "type": "string",
+          "description": "Candidate age in years",
+          "minLength": 1,
+          "maxLength": 10
+        },
+        "phone": {
+          "type": "string",
+          "description": "Candidate phone number",
+          "minLength": 6,
+          "maxLength": 30
+        },
+        "lineId": {
+          "type": "string",
+          "description": "Candidate Line ID",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "completedAtText": {
+          "type": "string",
+          "description": "Formatted Thai date-time string when assessment was submitted",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "overallScore": {
+          "type": "integer",
+          "description": "Overall suitability score (0-100)"
+        },
+        "mbtiCode": {
+          "type": "string",
+          "description": "4-letter MBTI code",
+          "minLength": 4,
+          "maxLength": 10
+        },
+        "discCode": {
+          "type": "string",
+          "description": "Dominant DISC style code and label",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "enneagramCode": {
+          "type": "string",
+          "description": "Dominant Enneagram type code and label",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "topRoleTitle": {
+          "type": "string",
+          "description": "Top matched insurance career track title",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "answers": {
+          "type": "object",
+          "description": "Map of question ID to selected Likert rating (1-5)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when submission was created"
+        }
+      },
+      "required": [
+        "firstName",
+        "lastName",
+        "nickname",
+        "age",
+        "phone",
+        "lineId",
+        "completedAtText",
+        "overallScore",
+        "mbtiCode",
+        "discCode",
+        "enneagramCode",
+        "topRoleTitle",
+        "answers",
+        "createdAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized admin user record.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["email", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/assessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/AssessmentSubmission" },
+      "description": "Candidate assessment submissions. Public create with strict schema validation; read/list/delete restricted strictly to verified Admin."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Additional authorized admin users managed by the primary admin."
+    }
+  }
+}

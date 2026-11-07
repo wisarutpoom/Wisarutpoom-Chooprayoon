@@ -1,0 +1,6 @@
+{
+  "name": "LifeAdvisor Psychometrics — ระบบประเมินความเหมาะสมอาชีพตัวแทนประกันชีวิต (MBTI + Big Five)",
+  "description": "เว็บไซต์ประเมินศักยภาพและความเหมาะสมในอาชีพตัวแทนประกันชีวิตและที่ปรึกษาทางการเงินอย่างละเอียด 45 ข้อ ตามหลักการ MBTI, Big Five (OCEAN) และสมรรถนะวิชาชีพ พร้อมกราฟวิเคราะห์จุดเด่น จุดด้อย คำแนะนำรายหมวด และรายงานแผนพัฒนาตนเอง",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Sarabun', 'TH Sarabun New', 'TH SarabunPSK', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Sarabun', 'TH Sarabun New', 'TH SarabunPSK', sans-serif;
+    --font-mono: 'Sarabun', 'TH Sarabun New', monospace;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (min-width: 640px) {
+    html {
+      font-size: 16.5px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    background-color: #FAF8F5;
+    color: #0C2340;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, button, input, select, textarea {
+    font-family: var(--font-display);
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    line-height: 1.35;
+  }
+}
+
+.font-mono-tabular {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.thai-gold-divider {
+  height: 2px;
+  background: linear-gradient(90deg, #0C2340 0%, #B48327 50%, #0C2340 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ============================================================================
+   A4 THAI SARABAN OFFICIAL PAPER SHEET (มาตรฐานงานสารบรรณไทย)
+   ขนาดกระดาษ A4: 210mm x 297mm
+   ระยะขอบกระดาษตามระเบียบงานสารบรรณ:
+   - ขอบบน (Top):    2.5 ซม. (25mm)
+   - ขอบล่าง (Bottom): 2.0 ซม. (20mm)
+   - ขอบซ้าย (Left):   3.0 ซม. (30mm)
+   - ขอบขวา (Right):  2.0 ซม. (20mm)
+   ============================================================================ */
+@media screen {
+  .a4-saraban-sheet {
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FFFFFF;
+    padding-top: 25mm;
+    padding-bottom: 20mm;
+    padding-left: 30mm;
+    padding-right: 20mm;
+    box-shadow: 0 12px 32px -8px rgba(12, 35, 64, 0.12), 0 2px 6px -1px rgba(12, 35, 64, 0.06);
+    border: 1px solid #D6CEBF;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 959px) {
+    .a4-saraban-sheet {
+      padding: 1.75rem 1.5rem;
+      min-height: auto;
+      border-radius: 1rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .a4-saraban-sheet {
+      padding: 1rem;
+      min-height: auto;
+      border-radius: 0.875rem;
+    }
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin-top: 25mm;
+    margin-bottom: 20mm;
+    margin-left: 30mm;
+    margin-right: 20mm;
+  }
+
+  html {
+    font-size: 11px !important;
+  }
+
+  body {
+    background-color: #FFFFFF !important;
+    color: #0C2340 !important;
+    line-height: 1.32 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-one-page {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .a4-saraban-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .print-break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

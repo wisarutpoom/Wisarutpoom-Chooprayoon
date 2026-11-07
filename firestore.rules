@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email_verified == true &&
+        (
+          request.auth.token.email == 'Wisarutpoom@gmail.com' ||
+          request.auth.token.email == 'wisarutpoom@gmail.com' ||
+          exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        );
+    }
+
+    function isValidAssessmentSubmission(data) {
+      return data.keys().hasAll([
+          'firstName',
+          'lastName',
+          'nickname',
+          'age',
+          'phone',
+          'lineId',
+          'completedAtText',
+          'overallScore',
+          'mbtiCode',
+          'discCode',
+          'enneagramCode',
+          'topRoleTitle',
+          'answers',
+          'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'firstName',
+          'lastName',
+          'nickname',
+          'age',
+          'phone',
+          'lineId',
+          'completedAtText',
+          'overallScore',
+          'mbtiCode',
+          'discCode',
+          'enneagramCode',
+          'topRoleTitle',
+          'answers',
+          'createdAt'
+        ]) &&
+        data.firstName is string && data.firstName.size() >= 1 && data.firstName.size() <= 100 &&
+        data.lastName is string && data.lastName.size() >= 1 && data.lastName.size() <= 100 &&
+        data.nickname is string && data.nickname.size() >= 1 && data.nickname.size() <= 60 &&
+        data.age is string && data.age.size() >= 1 && data.age.size() <= 10 &&
+        data.phone is string && data.phone.size() >= 6 && data.phone.size() <= 30 &&
+        data.lineId is string && data.lineId.size() >= 1 && data.lineId.size() <= 80 &&
+        data.completedAtText is string && data.completedAtText.size() >= 1 && data.completedAtText.size() <= 120 &&
+        data.overallScore is int && data.overallScore >= 0 && data.overallScore <= 100 &&
+        data.mbtiCode is string && data.mbtiCode.size() >= 4 && data.mbtiCode.size() <= 10 &&
+        data.discCode is string && data.discCode.size() >= 1 && data.discCode.size() <= 80 &&
+        data.enneagramCode is string && data.enneagramCode.size() >= 1 && data.enneagramCode.size() <= 100 &&
+        data.topRoleTitle is string && data.topRoleTitle.size() >= 1 && data.topRoleTitle.size() <= 150 &&
+        data.answers is map && data.answers.size() >= 1 && data.answers.size() <= 120 &&
+        data.createdAt == request.time;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'createdAt']) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 150 &&
+        data.createdAt == request.time;
+    }
+
+    // 3. Collection: /assessments/{assessmentId}
+    match /assessments/{assessmentId} {
+      // Candidates can submit their completed assessment (strictly validated payload + server timestamp)
+      allow create: if isValidId(assessmentId) && isValidAssessmentSubmission(incoming());
+
+      // PII Isolation: Only verified Admin can read or list candidate submissions
+      allow get: if isValidId(assessmentId) && isVerifiedAdmin();
+      allow list: if isVerifiedAdmin() && resource.data.overallScore >= 0;
+
+      // Submissions can only be updated/re-synced or deleted by verified Admin
+      allow update: if isValidId(assessmentId) && isValidAssessmentSubmission(incoming()) && isVerifiedAdmin();
+      allow delete: if isValidId(assessmentId) && isVerifiedAdmin();
+    }
+
+    // 4. Collection: /admins/{adminUid}
+    match /admins/{adminUid} {
+      allow get: if isValidId(adminUid) && isVerifiedAdmin();
+      allow list: if isVerifiedAdmin() && resource.data.email is string;
+      allow create: if isValidId(adminUid) && isVerifiedAdmin() && isValidAdminUser(incoming());
+      allow update: if false;
+      allow delete: if isValidId(adminUid) && isVerifiedAdmin();
+    }
+  }
+}
